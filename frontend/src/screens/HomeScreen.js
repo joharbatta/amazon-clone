@@ -27,8 +27,13 @@ const HomeScreen = {
       </li>
       `
         )
-        .join('\n')}
+        .join('')}
+    </ul>
     `;
   },
 };
 export default HomeScreen;
+
+// https://stackoverflow.com/questions/45812160/unexpected-comma-using-map template literals use the toString() method which by default joins the returned array by map with a ,.
+//To avoid this "problem" you can use join('')
+//The join() method returns the array as a string.
