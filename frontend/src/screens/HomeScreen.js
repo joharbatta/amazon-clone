@@ -1,21 +1,22 @@
 import axios from 'axios';
+
 const HomeScreen = {
-  render: async() => {
-    const response = await axios({
-      url: 'http://localhost:5000/api/products',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response || response.statusText !== 'OK') {
-      return `<div>Error in getting data</div>`;
-    }
-    const products = response.data;
-    return `
+	render: async () => {
+		const response = await axios({
+			url: 'http://localhost:5000/api/products',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+		if (!response || response.statusText !== 'OK') {
+			return '<div>Error in getting data</div>';
+		}
+		const products = response.data;
+		return `
     <ul class="products">
       ${products
-        .map(
-          (product) => `
+			.map(
+				(product) => `
       <li>
         <div class="product">
           <a href="/#/product/${product._id}">
@@ -35,14 +36,14 @@ const HomeScreen = {
         </div>
       </li>
       `
-        )
-        .join('')}
+			)
+			.join('')}
     </ul>
     `;
-  },
+	},
 };
 export default HomeScreen;
 
 // https://stackoverflow.com/questions/45812160/unexpected-comma-using-map template literals use the toString() method which by default joins the returned array by map with a ,.
-//To avoid this "problem" you can use join('')
-//The join() method returns the array as a string.
+// To avoid this "problem" you can use join('')
+// The join() method returns the array as a string.

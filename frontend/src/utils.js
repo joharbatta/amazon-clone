@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/prefer-default-export
 export const parseRequestUrl = () => {
     const url = document.location.hash.toLowerCase();
     const request = url.split('/');
