@@ -7,7 +7,7 @@ export default {
         image: '/images/BB.jpg',
         price: 59,
         brand: 'Wakefit',
-        rating: 4.5,
+        rating: 4.3,
         numReviews: 10,
         countInStock: 6,
       },
