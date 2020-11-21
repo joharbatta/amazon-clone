@@ -9,6 +9,7 @@ const routes = {
 };
 const router = async () => {
 	const request = parseRequestUrl();
+	console.log(request);
 	const parseUrl =
 		(request.resource ? `/${request.resource}` : '/') +
 		(request.id ? '/:id' : '') +
