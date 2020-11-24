@@ -1,24 +1,41 @@
-import { parseRequestUrl } from "../utils";
+import { parseRequestUrl, rerender } from "../utils";
 import { getProduct } from "../api";
-import { getCartItems,setCartItems } from "../localStorage";
-
+import { getCartItems, setCartItems } from "../localStorage";
 
 const addToCart = (item, forceUpdate = false) => {
   let cartItems = getCartItems();
   const existItem = cartItems.find((x) => x.product === item.product);
   if (existItem) {
-      // if already exist will just update cart item 
-    cartItems = cartItems.map((x) =>
-      x.product === existItem.product ? item : x
-    );
+    // if already exist will just update cart item
+    if (forceUpdate) {
+      cartItems = cartItems.map((x) =>
+        x.product === existItem.product ? item : x
+      );
+    }
   } else {
     cartItems = [...cartItems, item];
   }
+  console.log(cartItems);
+  // here we are setting items in local storage
   setCartItems(cartItems);
+  if (forceUpdate) {
+    // eslint-disable-next-line no-use-before-define
+      rerender(CartScreen);
+  }
 };
 
 const CartScreen = {
-  after_render: () => {},
+  after_render: () => {
+      // here on change qty addTocart will be called
+    const qtySelects = document.getElementsByClassName("qty-select");
+    Array.from(qtySelects).forEach((qtySelect) => {
+      qtySelect.addEventListener('change', (e) => {
+        console.log(e.target.value);
+        const item = getCartItems().find((x) => x.product === qtySelect.id);
+        addToCart({ ...item, qty: Number(e.target.value) }, true);
+      });
+    });
+  },
   render: async () => {
     const request = parseRequestUrl();
     if (request.id) {
@@ -32,7 +49,7 @@ const CartScreen = {
         qty: 1,
       });
     }
-    const cartItems=getCartItems();
+    const cartItems = getCartItems();
     return `
     <div class="content cart">
         <div class="cart-list">
@@ -42,10 +59,12 @@ const CartScreen = {
                     <div>Price</div>
                 </li>
                 ${
-                    cartItems.length===0?
-                    '<div>Cart is Empty <a href="#">Go to Shopping</a></div>':
-                    cartItems.map(item=>
-                    `
+                  cartItems.length === 0
+                    ? '<div>Cart is Empty <a href="#">Go to Shopping</a></div>'
+                    : cartItems
+                        .map(
+                          (item) =>
+                            `
                     <li>
                         <div class="cart-image">
                             <img src="${item.image}" alt="${item.name}"/>
@@ -57,10 +76,24 @@ const CartScreen = {
                                 </a>
                             </div>
                             <div>
-                                Qty: <select name="qty-select" id="${item.product}">
-                                <option value="1">1</option>
+                                Qty: <select class="qty-select" id="${
+                                  item.product
+                                }">
+                                ${[
+                                  ...Array(item.countInStock).keys(),
+                                ].map((x) =>
+                                  item.qty === x + 1
+                                    ? `<option selected value="${x + 1}">${
+                                        x + 1
+                                      }</option>`
+                                    : `<option value="${x + 1}">${
+                                        x + 1
+                                      }</option>`
+                                )}
                                 </select>
-                                <button type="button" class="delete-button" id=${item.product}>
+                                <button type="button" class="delete-button" id=${
+                                  item.product
+                                }>
                                     Delete
                                 </button>
                             </div>
@@ -69,16 +102,17 @@ const CartScreen = {
                             $${item.price}
                         </div>
                     </li>
-                    `).join("\n")
-                    
+                    `
+                        )
+                        .join("\n")
                 }
             </ul>
         </div>
         <div class="cart-action">
             <h3>
-                Subtotal (${cartItems.reduce((a,c)=>a+c.qty,0)}) Items
+                Subtotal (${cartItems.reduce((a, c) => a + c.qty, 0)}) Items
                 :
-                $${cartItems.reduce((a,c)=>a+c.price*c.qty,0)}
+                $${cartItems.reduce((a, c) => a + c.price * c.qty, 0)}
             </h3>
             <button id="checkout-button" class="primary fw">
             Proceed to Checkout

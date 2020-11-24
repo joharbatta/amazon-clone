@@ -9,3 +9,9 @@ export const parseRequestUrl = () => {
       action: request[3],
     };
   };
+
+  export const rerender=async (component)=>{
+    document.getElementById('main-container').innerHTML = await component.render();
+  // this means not calling function but render fxn again load code again
+     await component.after_render();
+  }
