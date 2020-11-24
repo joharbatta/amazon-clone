@@ -9,7 +9,7 @@ export default {
         brand: 'Wakefit',
         rating: 4.3,
         numReviews: 10,
-        countInStock: 6,
+        countInStock: 60,
       },
       {
         _id: '2',
@@ -19,6 +19,7 @@ export default {
         price: 70,
         brand: 'Wakefit',
         rating: 5,
+        countInStock: 60,
         numReviews: 51,
       },
       {
