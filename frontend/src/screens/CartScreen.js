@@ -23,6 +23,15 @@ const addToCart = (item, forceUpdate = false) => {
       rerender(CartScreen);
   }
 };
+const removeFromCart=(id)=>{
+    setCartItems(getCartItems().filter((x) => x.product !== id));
+     if (id === parseRequestUrl().id) {
+        document.location.hash = '/cart';
+    } else {
+        // eslint-disable-next-line no-use-before-define
+        rerender(CartScreen);
+    }
+}
 
 const CartScreen = {
   after_render: () => {
@@ -33,6 +42,12 @@ const CartScreen = {
         console.log(e.target.value);
         const item = getCartItems().find((x) => x.product === qtySelect.id);
         addToCart({ ...item, qty: Number(e.target.value) }, true);
+      });
+    });
+    const deleteButtons=document.getElementsByClassName("delete-button");
+      Array.from(deleteButtons).forEach((deleteButton) => {
+      deleteButton.addEventListener('click', () => {
+          removeFromCart(deleteButton.id);
       });
     });
   },
