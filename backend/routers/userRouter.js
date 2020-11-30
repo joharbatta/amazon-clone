@@ -9,7 +9,7 @@ userRouter.get('/createadmin',expressAsyncHandler(async(req,res)=>{
  try {
     const user = new User({
       name: 'admin',
-      email: 'jatt',
+      email: 'test@test.com',
       password: 'jatt',
       isAdmin: true,
     });
