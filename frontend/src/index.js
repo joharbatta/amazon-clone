@@ -1,6 +1,6 @@
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
-import { parseRequestUrl } from './utils';
+import { parseRequestUrl, showLoading, hideLoading } from './utils';
 import Error404Screen from './screens/Error404Screen';
 import CartScreen from './screens/CartScreen';
 import SigninScreen from './screens/SigninScreen';
@@ -14,6 +14,7 @@ const routes = {
 	'/signin': SigninScreen,
 };
 const router = async () => {
+	showLoading();
 	const request = parseRequestUrl();
 	console.log(request);
 	const parseUrl =
@@ -30,6 +31,7 @@ const router = async () => {
 	const main = document.getElementById('main-container');
 	main.innerHTML = await screen.render();
 	await screen.after_render();
+	 hideLoading();
 };
 window.addEventListener('load', router);
 window.addEventListener('hashchange', router);
