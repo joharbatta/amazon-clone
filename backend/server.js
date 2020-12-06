@@ -41,13 +41,8 @@ app.get('/api/products/:id', (req, res) => {
 
 // error handler
 app.use((err, req, res, next) => {
-  // render the error page
-   if (res.headersSent) {
-    return next(err)
-  }
-   res.status(err.status || 500);
-   res.send('error', { error: err });
-
+  const status = err.name && err.name === 'ValidationError' ? 400 : 500;
+  res.status(status).send({ message: err.message });
 });
 
 app.listen(5000, () => {
