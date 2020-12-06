@@ -10,3 +10,4 @@ export const generateToken=(user)=>{
     },
     config.JWT_SECRET)
 }
+
