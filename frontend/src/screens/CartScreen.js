@@ -50,6 +50,9 @@ const CartScreen = {
           removeFromCart(deleteButton.id);
       });
     });
+     document.getElementById('checkout-button').addEventListener('click', () => {
+      document.location.hash = '/signin';
+    });
   },
   render: async () => {
     const request = parseRequestUrl();
