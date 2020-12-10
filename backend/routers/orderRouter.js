@@ -5,6 +5,19 @@ import Order from '../models/orderModel';
 
 const orderRouter = express.Router();
 
+orderRouter.get(
+  '/:id',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      res.send(order);
+    } else {
+      res.status(404).send({ message: 'Order Not Found' });
+    }
+  })
+);
+
 orderRouter.post(
   '/',
   isAuth,
@@ -15,7 +28,7 @@ orderRouter.post(
       shipping: req.body.shipping,
       payment: req.body.payment,
       itemsPrice: req.body.itemsPrice,
-      taxtPrice: req.body.taxtPrice,
+      taxPrice: req.body.taxPrice,
       shippingPrice: req.body.shippingPrice,
       totalPrice: req.body.totalPrice,
     });
