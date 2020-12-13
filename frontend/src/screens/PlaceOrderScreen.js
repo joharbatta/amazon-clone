@@ -44,7 +44,7 @@ const PlaceOrderScreen = {
           
           showMessage(data.error);
         } else {
-        //   cleanCart();
+         cleanCart();
           document.location.hash = `/order/${data.order._id}`;
         }
        });
