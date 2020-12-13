@@ -1,11 +1,74 @@
 import { parseRequestUrl } from "../utils";
-import { getOrder } from '../api';
+import { getOrder, getPaypalClientId, payOrder  } from "../api";
+import { showLoading ,hideLoading,showMessage, rerender} from "./../utils";
+
+const addPaypalSdk = async (totalPrice) => {
+  const clientId = await getPaypalClientId();
+  showLoading();
+  if (!window.paypal) {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://www.paypalobjects.com/api/checkout.js";
+    script.async = true;
+    script.onload = () => handlePayment(clientId, totalPrice);
+    document.body.appendChild(script);
+  } else {
+    handlePayment(clientId, totalPrice);
+  }
+};
+
+const handlePayment = (clientId, totalPrice) => {
+  window.paypal.Button.render({
+    env: "sandbox",
+    client: {
+      sandbox: clientId,
+      production: "",
+    },
+    locale: "en_US",
+    style: {
+      size: "responsive",
+      color: "gold",
+      shape: "pill",
+    },
+    commit: true,
+    payment(data, actions) {
+        console.log(data);
+        return actions.payment.create({
+          transactions: [
+            {
+              amount: {
+                total: totalPrice,
+                currency: 'USD',
+              },
+            },
+          ],
+        });
+      },
+      onAuthorize(data, actions) {
+        console.log(data);
+          return actions.payment.execute().then(async()=>{
+            showLoading();
+          await payOrder(parseRequestUrl().id, {
+            orderID: data.orderID,
+            payerID: data.payerID,
+            paymentID: data.paymentID,
+          });
+             hideLoading();
+             showMessage('Payment was successfull.', () => {
+                rerender(OrderScreen);
+            });
+          })
+      },
+  },'#paypal-button'
+  ).then(() => {
+    hideLoading();
+  });
+};
 
 const OrderScreen = {
-  after_render: () => {  
-  },
-  render: async() => {
-    const request =parseRequestUrl();
+  after_render: () => {},
+  render: async () => {
+    const request = parseRequestUrl();
     const {
       _id,
       shipping,
@@ -19,8 +82,10 @@ const OrderScreen = {
       deliveredAt,
       isPaid,
       paidAt,
-    }  =await getOrder(request.id);
-
+    } = await getOrder(request.id);
+    if (!isPaid) {
+      addPaypalSdk(totalPrice);
+    }
     return `
     <div>
         <h1>Order ${_id}</h1>
@@ -29,14 +94,16 @@ const OrderScreen = {
                 <div>
                     <h2>Shipping</h2>
                     <div>
-                    ${shipping.address}, ${shipping.city}, ${shipping.postalCode}, 
+                    ${shipping.address}, ${shipping.city}, ${
+      shipping.postalCode
+    }, 
                     ${shipping.country}
                     </div>
                      ${
-                        isDelivered
-                          ? `<div class="success">Delivered at ${deliveredAt}</div>`
-                          : `<div class="error">Not Delivered</div>`
-                      }
+                       isDelivered
+                         ? `<div class="success">Delivered at ${deliveredAt}</div>`
+                         : `<div class="error">Not Delivered</div>`
+                     }
                 </div>
                 <div>
                     <h2>Payment</h2>
@@ -55,7 +122,9 @@ const OrderScreen = {
                             <h2>Shopping Cart</h2>
                             <div>Price</div>
                         </li>
-                        ${orderItems.map(item =>`
+                        ${orderItems
+                          .map(
+                            (item) => `
                             <li>
                             <div class="cart-image">
                                 <img src="${item.image}" alt="${item.name}" />
@@ -68,7 +137,9 @@ const OrderScreen = {
                             </div>
                             <div class="cart-price">$${item.price}</div>
                             </li>
-                        `).join('\n')}
+                        `
+                          )
+                          .join("\n")}
                     </ul>
                 </div>
             </div>
@@ -94,6 +165,10 @@ const OrderScreen = {
                     <div>Order Total</div>
                     <div>$${totalPrice}</div>
                    </li>
+                    <li>
+                    <div class="fw" id="paypal-button">
+                    </div>
+                    </li>
                   
                 </ul>
                     
@@ -102,7 +177,6 @@ const OrderScreen = {
 
     </div>
     `;
-
   },
 };
 
