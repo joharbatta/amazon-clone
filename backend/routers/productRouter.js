@@ -26,4 +26,18 @@ productRouter.post(
     }
   })
 );
+productRouter.get(
+  '/',
+  expressAysncHandler(async (req, res) => {
+    const products = await Product.find({});
+    res.send(products);
+  })
+);
+productRouter.get(
+  '/:id',
+  expressAysncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    res.send(product);
+  })
+);
 export default productRouter;

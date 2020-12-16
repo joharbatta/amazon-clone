@@ -10,6 +10,13 @@ const ProductListScreen = {
         console.log(data);
         document.location.hash = `/product/${data.product._id}/`;
       });
+
+      const editButtons = document.getElementsByClassName('edit-button');
+      Array.from(editButtons).forEach((editButton) => {
+        editButton.addEventListener('click', () => {
+          document.location.hash = `/product/${editButton.id}/edit`;
+        });
+    });
   },
   render: async () => {
     const products = await getProducts();
