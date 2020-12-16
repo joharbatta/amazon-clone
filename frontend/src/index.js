@@ -13,10 +13,12 @@ import PlaceOrderScreen from './screens/PlaceOrderScreen';
 import OrderScreen from './screens/OrderScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import ProductListScreen from './screens/ProductListScreen';
+import ProductEditScreen from './screens/ProductEditScreen';
 
 const routes = {
 	'/': HomeScreen,
 	'/product/:id': ProductScreen,
+	'/product/:id/edit': ProductEditScreen,
 	'/cart/:id':CartScreen,
 	'/cart':CartScreen,
 	'/signin': SigninScreen,
@@ -42,7 +44,6 @@ const router = async () => {
     const header = document.getElementById('header-container');
 	header.innerHTML = await Header.render();
 	await Header.after_render();
-
 	console.log(parseUrl);
 	const main = document.getElementById('main-container');
 	main.innerHTML = await screen.render();
