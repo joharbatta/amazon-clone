@@ -1,14 +1,12 @@
 import DashboardMenu from '../components/DashboardMenu';
-import { getProducts, createProduct } from '../api';
+import { getProducts } from '../api';
 
 const ProductListScreen = {
    after_render: () => {
     document
       .getElementById('create-product-button')
       .addEventListener('click', async () => {
-        const data = await createProduct();
-        console.log(data);
-        document.location.hash = `/product/${data.product._id}/`;
+        document.location.hash = `/createproduct`;
       });
 
       const editButtons = document.getElementsByClassName('edit-button');

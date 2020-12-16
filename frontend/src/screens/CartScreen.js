@@ -89,7 +89,7 @@ const CartScreen = {
                         </div>
                         <div class="cart-name">
                             <div>
-                                <a href="$[/#/product/${item.product}">
+                                <a href="/#/product/${item.product}">
                                     ${item.name}
                                 </a>
                             </div>

@@ -14,11 +14,13 @@ import OrderScreen from './screens/OrderScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
+import ProductCreateScreen from './screens/ProductCreateScreen';
 
 const routes = {
 	'/': HomeScreen,
 	'/product/:id': ProductScreen,
 	'/product/:id/edit': ProductEditScreen,
+	'/createproduct': ProductCreateScreen,
 	'/cart/:id':CartScreen,
 	'/cart':CartScreen,
 	'/signin': SigninScreen,

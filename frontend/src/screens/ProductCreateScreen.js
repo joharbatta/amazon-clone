@@ -1,22 +1,19 @@
 import {
-  parseRequestUrl,
   showLoading,
   showMessage,
   hideLoading,
 } from '../utils';
-import { getProduct, updateProduct } from '../api';
+import { createProduct } from '../api';
 
-const ProductEditScreen = {
+const ProductCreateScreen = {
   after_render: () => {
-    const request = parseRequestUrl();
-    
+
     document
-      .getElementById('edit-product-form')
+      .getElementById('create-product-form')
       .addEventListener('submit', async (e) => {
         e.preventDefault();
         showLoading();
-        const data = await updateProduct({
-          _id: request.id,
+        const data = await createProduct({
           name: document.getElementById('name').value,
           price: document.getElementById('price').value,
           image: document.getElementById('image').value,
@@ -35,63 +32,47 @@ const ProductEditScreen = {
   },
 
   render: async () => {
-    const request = parseRequestUrl();
-    const product = await getProduct(request.id);
     return `
         <div class="content">
             <div>
                 <a href="/#/productlist"></a>
             </div>
             <div class="form-container">
-        <form id="edit-product-form">
+        <form id="create-product-form">
           <ul class="form-items">
             <li>
-              <h1>Edit Product ${product._id.substring(0, 8)}</h1>
+              <h1>Create Product </h1>
             </li>
             <li>
               <label for="name">Name</label>
-              <input type="text" name="name" value="${
-                product.name
-              }" id="name" />
+              <input type="text" name="name" id="name" />
             </li>
             <li>
               <label for="price">Price</label>
-              <input type="number" name="price" value="${
-                product.price
-              }" id="price" />
+              <input type="number" name="price" id="price" />
             </li>
             <li>
               <label for="image">Image (680 x 830)</label>
-              <input type="text" name="image" value="${
-                product.image
-              }" id="image" />
+              <input type="text" name="image" id="image" />
             </li>
             <li>
               <label for="brand">Brand</label>
-              <input type="text" name="brand" value="${
-                product.brand
-              }" id="brand" />
+              <input type="text" name="brand" id="brand" />
             </li>
             <li>
               <label for="countInStock">Count In Stock</label>
-              <input type="text" name="countInStock" value="${
-                product.countInStock
-              }" id="countInStock" />
+              <input type="text" name="countInStock" id="countInStock" />
             </li>
             <li>
               <label for="category">Category</label>
-              <input type="text" name="category" value="${
-                product.category
-              }" id="category" />
+              <input type="text" name="category" id="category" />
             </li>
             <li>
               <label for="description">Description</label>
-              <input type="text" name="description" value="${
-                product.description
-              }" id="description" />
+              <input type="text" name="description" id="description" />
             </li>
             <li>
-              <button type="submit" class="primary">Update</button>
+              <button type="submit" class="primary">Create</button>
             </li>
           </ul>
         </form>
@@ -101,4 +82,4 @@ const ProductEditScreen = {
   },
 };
 
-export default ProductEditScreen;
+export default ProductCreateScreen;
