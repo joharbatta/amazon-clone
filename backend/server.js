@@ -27,14 +27,18 @@ app.use(logger('dev'));
 app.use(cors());
 app.use(bodyParser.json());
 
-// app.use(express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, '/../frontend')));
 app.use('/uploads', express.static(path.join(__dirname, '/../uploads')));
+
 app.use('/api/uploads', uploadRouter);
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
 app.get('/api/paypal/clientId', (req, res) => {
   res.send({ clientId: config.PAYPAL_CLIENT_ID });
+});
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/../frontend/index.html'));
 });
 // app.get('/api/products', (req, res) => {
 // 	res.send(data.products);
