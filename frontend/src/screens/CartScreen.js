@@ -1,5 +1,6 @@
 import { parseRequestUrl, rerender } from "../utils";
 import { getProduct } from "../api";
+import { apiUrl } from "../config";
 import { getCartItems, setCartItems } from "../localStorage";
 
 const addToCart = (item, forceUpdate = false) => {
@@ -85,7 +86,7 @@ const CartScreen = {
                             `
                     <li>
                         <div class="cart-image">
-                            <img src="${item.image}" alt="${item.name}"/>
+                            <img src="${apiUrl}${item.image}" alt="${item.name}"/>
                         </div>
                         <div class="cart-name">
                             <div>

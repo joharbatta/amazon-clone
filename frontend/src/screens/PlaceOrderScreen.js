@@ -2,6 +2,7 @@ import { getCartItems, getShipping, getPayment,cleanCart } from "../localStorage
 import CheckoutSteps from "../components/CheckoutSteps";
 import { showLoading,hideLoading,showMessage } from "../utils";
 import { createOrder } from "../api";
+import { apiUrl } from "../config";
 
 const convertCartToOrder = () => {
   const orderItems = getCartItems();
@@ -88,7 +89,7 @@ const PlaceOrderScreen = {
                         ${orderItems.map(item =>`
                             <li>
                             <div class="cart-image">
-                                <img src="${item.image}" alt="${item.name}" />
+                                <img src="${apiUrl}${item.image}" alt="${item.name}" />
                             </div>
                              <div class="cart-name">
                                 <div>
