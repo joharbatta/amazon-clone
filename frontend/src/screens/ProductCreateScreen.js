@@ -3,7 +3,7 @@ import {
   showMessage,
   hideLoading,
 } from '../utils';
-import { createProduct } from '../api';
+import { createProduct,uploadProductImage } from '../api';
 
 const ProductCreateScreen = {
   after_render: () => {
@@ -27,6 +27,23 @@ const ProductCreateScreen = {
           showMessage(data.error);
         } else {
           document.location.hash = '/productlist';
+        }
+      });
+
+        document
+      .getElementById('image-file')
+      .addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('image', file);
+        showLoading();
+        const data = await uploadProductImage(formData);
+        hideLoading();
+        if (data.error) {
+          showMessage(data.error);
+        } else {
+          showMessage('Image uploaded successfully.');
+          document.getElementById('image').value = data.image;
         }
       });
   },
@@ -54,6 +71,7 @@ const ProductCreateScreen = {
             <li>
               <label for="image">Image (680 x 830)</label>
               <input type="text" name="image" id="image" />
+               <input type="file" name="image-file" id="image-file" />
             </li>
             <li>
               <label for="brand">Brand</label>
