@@ -4,7 +4,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
-import data from './data';
+import path from 'path';
+import uploadRouter from './routers/uploadRouter';
 import config from './config';
 import userRouter from './routers/userRouter';
 import orderRouter from './routers/orderRouter';
@@ -25,6 +26,10 @@ const app = express();
 app.use(logger('dev'));
 app.use(cors());
 app.use(bodyParser.json());
+
+// app.use(express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '/../uploads')));
+app.use('/api/uploads', uploadRouter);
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
@@ -53,4 +58,5 @@ app.use((err, req, res, next) => {
 
 app.listen(5000, () => {
 	console.log('serve at http://localhost:5000');
+  console.log(path.join(__dirname, 'uploads'));
 });

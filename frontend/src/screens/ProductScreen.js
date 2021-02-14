@@ -2,6 +2,7 @@
 import { parseRequestUrl, showLoading, hideLoading } from "../utils";
 import { getProduct } from "../api";
 import Rating from '../components/Rating';
+import { apiUrl } from "../config";
 
 const ProductScreen = {
   after_render:()=>{
@@ -26,7 +27,7 @@ const ProductScreen = {
       </div>
       <div class="details">
        <div class="details-image">
-       <img src="${product.image}" alt="${product.name}" class=""/>
+       <img src="${apiUrl}${product.image}" alt="${product.name}" class=""/>
       </div>
       <div class="details-info">
       <ul>
